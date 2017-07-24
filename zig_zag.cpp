@@ -63,8 +63,11 @@ public:
 
 
 main(){
-  string word="hola jesus";
-  int clave;
+  string word;
+	cout<< "Texto para cifrar: ";
+	cin>>word;
+  cout<< "Clave: ";
+	int clave;
   cin >> clave;
   Zig_zag emisor(word);
   cout << emisor.cifrado_zig_zag(emisor.get_texto_plano(),clave) << endl;
