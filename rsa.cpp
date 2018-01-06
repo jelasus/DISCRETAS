@@ -1,15 +1,14 @@
 #include<iostream>
 #include"rsa.h"
 std::string RSA::alfabeto = "abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-RSA::RSA(int _bits){
-	this->p=generar_aleatorio(_bits/2);
-	this->q=generar_aleatorio(_bits/2);
-	std::cout << this->p << std::endl;
-	std::cout << this->q << std::endl;
+RSA::RSA(unsigned int _bits){
+	this->p=generar_aleatorio(_bits>>1);
+	this->q=generar_aleatorio(_bits>>1);
+	std::cout << "Key p: " << this->p << std::endl;
+	std::cout << "Key q: " <<this->q << std::endl;
 	this->N=this->q*this->p;
-	std::cout<<"Ingrese clave: ";
-	std::cin>>this->e;
-	clave(this->e);
+	clave(this->e, _bits>>1);
+	std::cout << "Key e: " << this->e << std::endl;
 }
 bool RSA::fermatTheorem(num n, int k){
 	if (n <= 1 || n == 4)  return false;
@@ -25,14 +24,12 @@ bool RSA::fermatTheorem(num n, int k){
 num RSA::mcd(num numero, num modulo){
 	return binaryGCD(numero,modulo);
 }
-void RSA::clave(num &_e){
+void RSA::clave(num &_e, unsigned int _bits){
 	num fi=num((this->p-1)*(this->q-1));	
-	while(mcd(_e,fi)!=1){
-		std::cout<<"Ingrese otra clave: "; 
-		std::cin>>_e;
-	}
+	while(mcd(_e,fi)!=1)
+		_e = generar_aleatorio(_bits-1);
 }
-num RSA::generar_aleatorio(int _bits){
+num RSA::generar_aleatorio(unsigned int _bits){
 	num randomNumber;
   int len=_bits/8;
   std::ifstream generater;
@@ -78,7 +75,7 @@ bool RSA::esPrimo(num prime, int k){
   }
   return true;
 }
-void RSA::establecerSemilla(num &semilla, int _bits){
+void RSA::establecerSemilla(num &semilla, unsigned int _bits){
 	int bitState=(int)clock();
   int i=0;
   if (bitState&1)
